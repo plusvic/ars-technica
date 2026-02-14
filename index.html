@@ -1,0 +1,756 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ars Technica</title>
+    <link rel="icon" type="image/x-icon" href="images/favicon.ico">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=IBM+Plex+Mono:wght@400;600;700&family=Source+Serif+4:wght@300;400;600&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --radio-amber: #ff9d3d;
+            --radio-warm: #ffb366;
+            --tube-glow: #ffd699;
+            --bakelite-brown: #3d2817;
+            --vintage-cream: #f5ebe0;
+            --copper: #b87333;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Source Serif 4', serif;
+            background: #000000;
+            color: var(--vintage-cream);
+            line-height: 1.7;
+        }
+
+        .language-selector {
+            position: absolute;
+            top: 1rem;
+            right: 2rem;
+            display: flex;
+            gap: 0.5rem;
+            z-index: 100;
+        }
+
+        .lang-btn {
+            font-family: 'IBM Plex Mono', monospace;
+            background: rgba(61, 40, 23, 0.3);
+            border: 1px solid var(--copper);
+            color: var(--radio-warm);
+            padding: 0.4rem 0.8rem;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            font-size: 0.75rem;
+            transition: all 0.3s;
+        }
+
+        .lang-btn:hover,
+        .lang-btn.active {
+            background: var(--copper);
+            color: #000;
+            border-color: var(--radio-amber);
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        header {
+            padding: 1rem 0 0.5rem;
+            text-align: center;
+        }
+
+        .logo-container {
+            max-width: 700px;
+            margin: 0 auto 0.5rem;
+            position: relative;
+        }
+
+        .logo-img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        .logo-off {
+            position: relative;
+            z-index: 2;
+            animation: fadeOut 2s ease-in-out 1.5s forwards;
+        }
+
+        .logo-on {
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 1;
+            opacity: 0;
+            animation: tubeWarmUp 2s ease-in-out 1.5s forwards;
+        }
+
+        @keyframes tubeWarmUp {
+            0% {
+                opacity: 0;
+            }
+
+            50% {
+                opacity: 0.5;
+            }
+
+            100% {
+                opacity: 1;
+            }
+        }
+
+        @keyframes fadeOut {
+            0% {
+                opacity: 1;
+            }
+
+            100% {
+                opacity: 0;
+            }
+        }
+
+        .tagline {
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 0.9rem;
+            letter-spacing: 0.3em;
+            color: var(--radio-warm);
+            text-transform: uppercase;
+        }
+
+        nav {
+            background: rgba(61, 40, 23, 0.3);
+            padding: 1.5rem 0;
+            margin: 0 0 2rem;
+            border-top: 2px solid var(--copper);
+            border-bottom: 2px solid var(--copper);
+        }
+
+        nav ul {
+            list-style: none;
+            display: flex;
+            justify-content: center;
+            gap: 3rem;
+            flex-wrap: wrap;
+        }
+
+        nav a {
+            font-family: 'IBM Plex Mono', monospace;
+            color: var(--radio-warm);
+            text-decoration: none;
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+            font-size: 0.9rem;
+            transition: color 0.3s;
+            cursor: pointer;
+            padding-bottom: 0.3rem;
+            border-bottom: 2px solid transparent;
+        }
+
+        nav a:hover {
+            color: var(--tube-glow);
+        }
+
+        nav a.active {
+            color: var(--tube-glow);
+            border-bottom-color: var(--radio-amber);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+            animation: fadeInContent 0.4s ease;
+        }
+
+        @keyframes fadeInContent {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .hero {
+            text-align: center;
+            padding: 4rem 0;
+        }
+
+        .hero h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.5rem;
+            color: var(--radio-amber);
+            margin-bottom: 1.5rem;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            max-width: 700px;
+            margin: 0 auto;
+            line-height: 1.8;
+        }
+
+        section {
+            padding: 3rem 0;
+            border-top: 1px solid rgba(184, 115, 51, 0.2);
+        }
+
+        h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem;
+            color: var(--radio-amber);
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .service-card {
+            background: rgba(61, 40, 23, 0.2);
+            border: 1px solid var(--copper);
+            padding: 2rem;
+            text-align: center;
+        }
+
+        .service-card h4 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.3rem;
+            color: var(--radio-warm);
+            margin-bottom: 1rem;
+        }
+
+        .contact {
+            text-align: center;
+            background: rgba(61, 40, 23, 0.3);
+            padding: 3rem;
+            border: 2px solid var(--copper);
+            margin: 3rem 0;
+        }
+
+        .contact p {
+            font-size: 1.1rem;
+            margin: 1rem 0;
+        }
+
+        .contact a {
+            color: var(--radio-amber);
+            text-decoration: none;
+        }
+
+        footer {
+            text-align: center;
+            padding: 2rem 0;
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 0.85rem;
+            color: var(--radio-warm);
+            opacity: 0.7;
+            border-top: 1px solid rgba(184, 115, 51, 0.2);
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        .fade-in {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="language-selector">
+            <button class="lang-btn active" data-lang="en">EN</button>
+            <button class="lang-btn" data-lang="es">ES</button>
+        </div>
+
+        <header>
+            <div class="logo-container">
+                <img src="images/logo-tube-off.png" alt="Ars Technica Logo" class="logo-img logo-off">
+                <img src="images/logo-tube-on.png" alt="Ars Technica Logo" class="logo-img logo-on">
+            </div>
+        </header>
+
+        <nav>
+            <ul>
+                <li><a class="tab-link active" data-tab="home" data-i18n="nav.home">Home</a></li>
+                <li><a class="tab-link" data-tab="process" data-i18n="nav.process">Process</a></li>
+                <li><a class="tab-link" data-tab="gallery" data-i18n="nav.gallery">Gallery</a></li>
+                <li><a class="tab-link" data-tab="contact" data-i18n="nav.contact">Contact</a></li>
+            </ul>
+        </nav>
+
+        <div class="tab-content active" id="home">
+            <section class="hero">
+                <h2 data-i18n="home.title">Bringing Golden Age Radios Back to Life</h2>
+                <p data-i18n="home.description">We specialize in the complete restoration of vintage radios from the
+                    1930s through 1960s. Every dial, tube, and cabinet receives meticulous attention to preserve both
+                    beauty and authentic sound.</p>
+            </section>
+        </div>
+
+        <div class="tab-content" id="process">
+            <section id="process-section">
+                <h3 data-i18n="process.title">The Restoration Process</h3>
+                <div class="services-grid">
+                    <div class="service-card">
+                        <h4>1. Evaluation</h4>
+                        <p>Comprehensive assessment of your radio's condition, original specifications, and restoration
+                            needs.</p>
+                    </div>
+                    <div class="service-card">
+                        <h4>2. Disassembly</h4>
+                        <p>Careful removal of chassis, documentation of wiring, and preparation for restoration work.
+                        </p>
+                    </div>
+                    <div class="service-card">
+                        <h4>3. Electronics</h4>
+                        <p>Replacing aged capacitors, testing tubes, cleaning contacts, and ensuring electrical safety.
+                        </p>
+                    </div>
+                    <div class="service-card">
+                        <h4>4. Alignment</h4>
+                        <p>Precision alignment using period-appropriate test equipment to restore optimal performance.
+                        </p>
+                    </div>
+                    <div class="service-card">
+                        <h4>5. Cabinet Work</h4>
+                        <p>Veneer repair, wood restoration, refinishing with authentic methods and techniques.</p>
+                    </div>
+                    <div class="service-card">
+                        <h4>6. Final Testing</h4>
+                        <p>Extended testing period, final adjustments, and comprehensive quality assurance.</p>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <div class="tab-content" id="gallery">
+            <section id="gallery-section">
+                <div style="text-align: right; margin-bottom: 1.5rem;">
+                    <button id="filter-btn" class="lang-btn" data-filter="all" data-i18n="gallery.filter.available">On sale</button>
+                </div>
+                <div class="services-grid">
+                <!-- GALLERY:START -->
+                
+                    <div class="service-card" data-status="sold" style="padding: 0; overflow: hidden; display: flex; flex-direction: column; position: relative;">
+                        <div style="position: absolute; top: 0; right: 0; width: 250px; height: 250px; overflow: hidden; z-index: 10; pointer-events: none;">
+                            <div style="position: absolute; top: 55px; right: -70px; width: 350px; transform: rotate(45deg); background: linear-gradient(135deg, #8B0000 0%, #B22222 50%, #8B0000 100%); color: #f5ebe0; text-align: center; padding: 0.6rem 0; font-family: 'IBM Plex Mono', monospace; font-size: 0.75rem; font-weight: bold; text-transform: uppercase; letter-spacing: 0.25em; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5); border-top: 1px solid rgba(212, 175, 55, 0.85); border-bottom: 1px solid rgba(212, 175, 55, 0.85);" data-i18n="gallery.sold">Sold</div>
+                        </div>
+                        <div style="width: 100%; aspect-ratio: 4/3; overflow: hidden; flex-shrink: 0;">
+                            <img src="radio-5-emerson.jpg" alt="1938 Emerson AU-190 Catalin" style="width: 100%; height: 100%; object-fit: cover;">
+                        </div>
+                        <div style="padding: 1.5rem; display: flex; flex-direction: column; flex: 1;">
+                            <div style="font-family: 'IBM Plex Mono', monospace; font-size: 0.85rem; color: var(--copper); text-transform: uppercase; letter-spacing: 0.2em; margin-bottom: 0.5rem;">1938</div>
+                            <h4 style="margin-bottom: 0.8rem;">Emerson AU-190 Catalin</h4>
+                            <p style="margin-bottom: 0; font-size: 0.95rem; flex: 1;" data-i18n="radio1.desc">Rare Catalin plastic radio in marbled butterscotch. Highly collectible piece with complete restoration.</p>
+                            <div style="display: flex; justify-content: space-between; align-items: center; padding-top: 1rem; margin-top: 1rem; border-top: 1px solid rgba(184, 115, 51, 0.3);">
+                            <span style="font-family: 'Playfair Display', serif; font-size: 1.5rem; color: var(--tube-glow); font-weight: 700; text-decoration: line-through; opacity: 0.5;">2.400€</span>
+                            <span style="font-family: 'IBM Plex Mono', monospace; padding: 0.5rem 1rem; font-size: 0.75rem; opacity: 0.5;" data-i18n="gallery.sold">Sold</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="service-card" data-status="sold" style="padding: 0; overflow: hidden; display: flex; flex-direction: column; position: relative;">
+                        <div style="position: absolute; top: 0; right: 0; width: 250px; height: 250px; overflow: hidden; z-index: 10; pointer-events: none;">
+                            <div style="position: absolute; top: 55px; right: -70px; width: 350px; transform: rotate(45deg); background: linear-gradient(135deg, #8B0000 0%, #B22222 50%, #8B0000 100%); color: #f5ebe0; text-align: center; padding: 0.6rem 0; font-family: 'IBM Plex Mono', monospace; font-size: 0.75rem; font-weight: bold; text-transform: uppercase; letter-spacing: 0.25em; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5); border-top: 1px solid rgba(212, 175, 55, 0.85); border-bottom: 1px solid rgba(212, 175, 55, 0.85);" data-i18n="gallery.sold">Sold</div>
+                        </div>
+                        <div style="width: 100%; aspect-ratio: 4/3; overflow: hidden; flex-shrink: 0;">
+                            <img src="radio-2-zenith.jpg" alt="1935 Zenith 5-S-29 Tombstone" style="width: 100%; height: 100%; object-fit: cover;">
+                        </div>
+                        <div style="padding: 1.5rem; display: flex; flex-direction: column; flex: 1;">
+                            <div style="font-family: 'IBM Plex Mono', monospace; font-size: 0.85rem; color: var(--copper); text-transform: uppercase; letter-spacing: 0.2em; margin-bottom: 0.5rem;">1935</div>
+                            <h4 style="margin-bottom: 0.8rem;">Zenith 5-S-29 Tombstone</h4>
+                            <p style="margin-bottom: 0; font-size: 0.95rem; flex: 1;" data-i18n="radio2.desc">Classic art deco tombstone design. Complete electronics overhaul with new capacitors.</p>
+                            <div style="display: flex; justify-content: space-between; align-items: center; padding-top: 1rem; margin-top: 1rem; border-top: 1px solid rgba(184, 115, 51, 0.3);">
+                            <span style="font-family: 'Playfair Display', serif; font-size: 1.5rem; color: var(--tube-glow); font-weight: 700; text-decoration: line-through; opacity: 0.5;">1.200€</span>
+                            <span style="font-family: 'IBM Plex Mono', monospace; padding: 0.5rem 1rem; font-size: 0.75rem; opacity: 0.5;" data-i18n="gallery.sold">Sold</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="service-card" data-status="sold" style="padding: 0; overflow: hidden; display: flex; flex-direction: column; position: relative;">
+                        <div style="position: absolute; top: 0; right: 0; width: 250px; height: 250px; overflow: hidden; z-index: 10; pointer-events: none;">
+                            <div style="position: absolute; top: 55px; right: -70px; width: 350px; transform: rotate(45deg); background: linear-gradient(135deg, #8B0000 0%, #B22222 50%, #8B0000 100%); color: #f5ebe0; text-align: center; padding: 0.6rem 0; font-family: 'IBM Plex Mono', monospace; font-size: 0.75rem; font-weight: bold; text-transform: uppercase; letter-spacing: 0.25em; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5); border-top: 1px solid rgba(212, 175, 55, 0.85); border-bottom: 1px solid rgba(212, 175, 55, 0.85);" data-i18n="gallery.sold">Sold</div>
+                        </div>
+                        <div style="width: 100%; aspect-ratio: 4/3; overflow: hidden; flex-shrink: 0;">
+                            <img src="radio-1-philco.jpg" alt="1940 Philco Model 40-180" style="width: 100%; height: 100%; object-fit: cover;">
+                        </div>
+                        <div style="padding: 1.5rem; display: flex; flex-direction: column; flex: 1;">
+                            <div style="font-family: 'IBM Plex Mono', monospace; font-size: 0.85rem; color: var(--copper); text-transform: uppercase; letter-spacing: 0.2em; margin-bottom: 0.5rem;">1940</div>
+                            <h4 style="margin-bottom: 0.8rem;">Philco Model 40-180</h4>
+                            <p style="margin-bottom: 0; font-size: 0.95rem; flex: 1;" data-i18n="radio3.desc">Stunning cathedral-style console with complete restoration. All original tubes tested and working.</p>
+                            <div style="display: flex; justify-content: space-between; align-items: center; padding-top: 1rem; margin-top: 1rem; border-top: 1px solid rgba(184, 115, 51, 0.3);">
+                            <span style="font-family: 'Playfair Display', serif; font-size: 1.5rem; color: var(--tube-glow); font-weight: 700; text-decoration: line-through; opacity: 0.5;">850€</span>
+                            <span style="font-family: 'IBM Plex Mono', monospace; padding: 0.5rem 1rem; font-size: 0.75rem; opacity: 0.5;" data-i18n="gallery.sold">Sold</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="service-card" data-status="sale" style="padding: 0; overflow: hidden; display: flex; flex-direction: column;">
+                        <div style="width: 100%; aspect-ratio: 4/3; overflow: hidden; flex-shrink: 0;">
+                            <img src="radio-6-motorola.jpg" alt="1946 Motorola 68L11 Portable" style="width: 100%; height: 100%; object-fit: cover;">
+                        </div>
+                        <div style="padding: 1.5rem; display: flex; flex-direction: column; flex: 1;">
+                            <div style="font-family: 'IBM Plex Mono', monospace; font-size: 0.85rem; color: var(--copper); text-transform: uppercase; letter-spacing: 0.2em; margin-bottom: 0.5rem;">1946</div>
+                            <h4 style="margin-bottom: 0.8rem;">Motorola 68L11 Portable</h4>
+                            <p style="margin-bottom: 0; font-size: 0.95rem; flex: 1;" data-i18n="radio4.desc">Classic post-war portable with original handle. Electronics completely rebuilt. Cabinet refinished.</p>
+                            <div style="display: flex; justify-content: space-between; align-items: center; padding-top: 1rem; margin-top: 1rem; border-top: 1px solid rgba(184, 115, 51, 0.3);">
+                            <span style="font-family: 'Playfair Display', serif; font-size: 1.5rem; color: var(--tube-glow); font-weight: 700;">550€</span>
+                            <a href="mailto:info@arstechnica.shop?subject=Inquiry: Motorola 68L11 Portable" style="font-family: 'IBM Plex Mono', monospace; background: transparent; border: 2px solid var(--copper); color: var(--radio-warm); padding: 0.5rem 1rem; text-transform: uppercase; letter-spacing: 0.15em; font-size: 0.75rem; text-decoration: none; transition: all 0.3s;" data-i18n="gallery.inquire">Inquire</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="service-card" data-status="sale" style="padding: 0; overflow: hidden; display: flex; flex-direction: column;">
+                        <div style="width: 100%; aspect-ratio: 4/3; overflow: hidden; flex-shrink: 0;">
+                            <img src="radio-3-crosley.jpg" alt="1948 Crosley 56TD Deluxe" style="width: 100%; height: 100%; object-fit: cover;">
+                        </div>
+                        <div style="padding: 1.5rem; display: flex; flex-direction: column; flex: 1;">
+                            <div style="font-family: 'IBM Plex Mono', monospace; font-size: 0.85rem; color: var(--copper); text-transform: uppercase; letter-spacing: 0.2em; margin-bottom: 0.5rem;">1948</div>
+                            <h4 style="margin-bottom: 0.8rem;">Crosley 56TD Deluxe</h4>
+                            <p style="margin-bottom: 0; font-size: 0.95rem; flex: 1;" data-i18n="radio5.desc">Elegant table model with Bakelite cabinet. Fully recapped and aligned. Warm, rich sound.</p>
+                            <div style="display: flex; justify-content: space-between; align-items: center; padding-top: 1rem; margin-top: 1rem; border-top: 1px solid rgba(184, 115, 51, 0.3);">
+                            <span style="font-family: 'Playfair Display', serif; font-size: 1.5rem; color: var(--tube-glow); font-weight: 700;">650€</span>
+                            <a href="mailto:info@arstechnica.shop?subject=Inquiry: Crosley 56TD Deluxe" style="font-family: 'IBM Plex Mono', monospace; background: transparent; border: 2px solid var(--copper); color: var(--radio-warm); padding: 0.5rem 1rem; text-transform: uppercase; letter-spacing: 0.15em; font-size: 0.75rem; text-decoration: none; transition: all 0.3s;" data-i18n="gallery.inquire">Inquire</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="service-card" data-status="collection" style="padding: 0; overflow: hidden; display: flex; flex-direction: column;">
+                        <div style="width: 100%; aspect-ratio: 4/3; overflow: hidden; flex-shrink: 0;">
+                            <img src="radio-4-rca.jpg" alt="1952 RCA Victor 8-X-541" style="width: 100%; height: 100%; object-fit: cover;">
+                        </div>
+                        <div style="padding: 1.5rem; display: flex; flex-direction: column; flex: 1;">
+                            <div style="font-family: 'IBM Plex Mono', monospace; font-size: 0.85rem; color: var(--copper); text-transform: uppercase; letter-spacing: 0.2em; margin-bottom: 0.5rem;">1952</div>
+                            <h4 style="margin-bottom: 0.8rem;">RCA Victor 8-X-541</h4>
+                            <p style="margin-bottom: 0; font-size: 0.95rem; flex: 1;" data-i18n="radio6.desc">Portable leather-covered model with brass hardware. Complete restoration with modern safety upgrades.</p>
+                            <div style="display: flex; justify-content: space-between; align-items: center; padding-top: 1rem; margin-top: 1rem; border-top: 1px solid rgba(184, 115, 51, 0.3);">
+                            <span style="font-family: 'IBM Plex Mono', monospace; font-size: 0.8rem; color: var(--copper); text-transform: uppercase; letter-spacing: 0.15em; opacity: 0.8;" data-i18n="gallery.collection">Personal Collection</span>
+                            <span></span>
+                            </div>
+                        </div>
+                    </div>
+                <!-- GALLERY:END -->
+                </div>
+            </section>
+        </div>
+
+        <div class="tab-content" id="contact">
+            <section class="contact" id="contact-section">
+                <h3>Get In Touch</h3>
+                <p>Email: <a href="/cdn-cgi/l/email-protection#157c7b737a557467666170767d7b7c76743b667d7a65"><span
+                            class="__cf_email__"
+                            data-cfemail="4f262129200f2e3d3c3b2a2c2721262c2e613c27203f">[email&#160;protected]</span></a>
+                </p>
+                <p>Phone: <a href="tel:+15551234567">(555) 123-4567</a></p>
+                <p>Hours: Tuesday - Saturday, 10am - 6pm</p>
+            </section>
+        </div>
+
+        <footer>
+            <p>&copy; 2026 Ars Technica · Preserving Radio History</p>
+        </footer>
+    </div>
+
+    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script>
+    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script>
+    <script>
+        // Internationalization
+        const translations = {
+            en: {
+                'nav.home': 'Home',
+                'nav.process': 'Process',
+                'nav.gallery': 'Gallery',
+                'nav.contact': 'Contact',
+                'home.title': 'Bringing Golden Age Radios Back to Life',
+                'home.description': 'We specialize in the complete restoration of vintage radios from the 1930s through 1960s. Every dial, tube, and cabinet receives meticulous attention to preserve both beauty and authentic sound.',
+                'process.title': 'The Restoration Process',
+                'process.step1.title': '1. Evaluation',
+                'process.step1.desc': 'Comprehensive assessment of your radio\'s condition, original specifications, and restoration needs.',
+                'process.step2.title': '2. Disassembly',
+                'process.step2.desc': 'Careful removal of chassis, documentation of wiring, and preparation for restoration work.',
+                'process.step3.title': '3. Electronics',
+                'process.step3.desc': 'Replacing aged capacitors, testing tubes, cleaning contacts, and ensuring electrical safety.',
+                'process.step4.title': '4. Alignment',
+                'process.step4.desc': 'Precision alignment using period-appropriate test equipment to restore optimal performance.',
+                'process.step5.title': '5. Cabinet Work',
+                'process.step5.desc': 'Veneer repair, wood restoration, refinishing with authentic methods and techniques.',
+                'process.step6.title': '6. Final Testing',
+                'process.step6.desc': 'Extended testing period, final adjustments, and comprehensive quality assurance.',
+                'contact.title': 'Get In Touch',
+                'contact.email': 'Email:',
+                'contact.phone': 'Phone:',
+                'contact.hours': 'Hours: Tuesday - Saturday, 10am - 6pm',
+                'footer.text': '© 2026 Ars Technica · Preserving Radio History',
+                'gallery.sold': 'Sold',
+                'gallery.inquire': 'Inquire',
+                'gallery.collection': 'Personal Collection',
+                'gallery.filter.available': 'On sale',
+                'gallery.filter.all': 'Show all',
+                'radio1.desc': 'Rare Catalin plastic radio in marbled butterscotch. Highly collectible piece with complete restoration.',
+                'radio2.desc': 'Classic art deco tombstone design. Complete electronics overhaul with new capacitors.',
+                'radio3.desc': 'Stunning cathedral-style console with complete restoration. All original tubes tested and working.',
+                'radio4.desc': 'Classic post-war portable with original handle. Electronics completely rebuilt. Cabinet refinished.',
+                'radio5.desc': 'Elegant table model with Bakelite cabinet. Fully recapped and aligned. Warm, rich sound.',
+                'radio6.desc': 'Portable leather-covered model with brass hardware. Complete restoration with modern safety upgrades.'
+            },
+            es: {
+                'nav.home': 'Inicio',
+                'nav.process': 'Proceso',
+                'nav.gallery': 'Galería',
+                'nav.contact': 'Contacto',
+                'home.title': 'Devolviendo la Vida a las Radios de la Época Dorada',
+                'home.description': 'Nos especializamos en la restauración completa de radios vintage de los años 1930 a 1960. Cada dial, tubo y gabinete recibe atención meticulosa para preservar tanto la belleza como el sonido auténtico.',
+                'process.title': 'El Proceso de Restauración',
+                'process.step1.title': '1. Evaluación',
+                'process.step1.desc': 'Evaluación exhaustiva del estado de su radio, especificaciones originales y necesidades de restauración.',
+                'process.step2.title': '2. Desmontaje',
+                'process.step2.desc': 'Extracción cuidadosa del chasis, documentación del cableado y preparación para el trabajo de restauración.',
+                'process.step3.title': '3. Electrónica',
+                'process.step3.desc': 'Reemplazo de capacitores envejecidos, prueba de tubos, limpieza de contactos y garantía de seguridad eléctrica.',
+                'process.step4.title': '4. Alineación',
+                'process.step4.desc': 'Alineación de precisión usando equipo de prueba de época apropiada para restaurar el rendimiento óptimo.',
+                'process.step5.title': '5. Trabajo de Gabinete',
+                'process.step5.desc': 'Reparación de chapa, restauración de madera, refinado con métodos y técnicas auténticas.',
+                'process.step6.title': '6. Prueba Final',
+                'process.step6.desc': 'Período de prueba extendido, ajustes finales y aseguramiento de calidad exhaustivo.',
+                'contact.title': 'Contáctenos',
+                'contact.email': 'Correo:',
+                'contact.phone': 'Teléfono:',
+                'contact.hours': 'Horario: Martes - Sábado, 10am - 6pm',
+                'footer.text': '© 2026 Ars Technica · Preservando la historia de la radio',
+                'gallery.sold': 'Vendido',
+                'gallery.inquire': 'Consultar',
+                'gallery.collection': 'Colección Personal',
+                'gallery.filter.available': 'En venta',
+                'gallery.filter.all': 'Ver todos',
+                'radio1.desc': 'Rara radio de plástico Catalin en mariposa marmoleada. Pieza altamente coleccionable con restauración completa.',
+                'radio2.desc': 'Diseño clásico art déco tipo lápida. Revisión completa de electrónica con capacitores nuevos.',
+                'radio3.desc': 'Impresionante consola estilo catedral con restauración completa. Todos los tubos originales probados y funcionando.',
+                'radio4.desc': 'Portátil clásico de posguerra con asa original. Electrónica completamente reconstruida. Gabinete refinado.',
+                'radio5.desc': 'Elegante modelo de mesa con gabinete de baquelita. Completamente recapacitado y alineado. Sonido cálido y rico.',
+                'radio6.desc': 'Modelo portátil con cubierta de cuero y herrajes de latón. Restauración completa con mejoras de seguridad modernas.'
+            }
+        };
+
+        let currentLang = 'en';
+
+        function updateContent(lang) {
+            currentLang = lang;
+
+            // Update all elements with data-i18n attribute
+            document.querySelectorAll('[data-i18n]').forEach(element => {
+                const key = element.getAttribute('data-i18n');
+                if (translations[lang][key]) {
+                    element.textContent = translations[lang][key];
+                }
+            });
+
+            // Update process section
+            const processSteps = document.querySelectorAll('#process-section .service-card');
+            processSteps.forEach((card, index) => {
+                const stepNum = index + 1;
+                const title = card.querySelector('h4');
+                const desc = card.querySelector('p');
+                if (title) title.textContent = translations[lang][`process.step${stepNum}.title`];
+                if (desc) desc.textContent = translations[lang][`process.step${stepNum}.desc`];
+            });
+
+            // Update contact section
+            const contactSection = document.querySelector('#contact-section');
+            if (contactSection) {
+                const h3 = contactSection.querySelector('h3');
+                if (h3) h3.textContent = translations[lang]['contact.title'];
+
+                const paragraphs = contactSection.querySelectorAll('p');
+                if (paragraphs[0]) {
+                    paragraphs[0].innerHTML = translations[lang]['contact.email'] + ' <a href="mailto:info@arstechnica.shop">info@arstechnica.shop</a>';
+                }
+                if (paragraphs[1]) {
+                    paragraphs[1].innerHTML = translations[lang]['contact.phone'] + ' <a href="tel:+15551234567">(555) 123-4567</a>';
+                }
+                if (paragraphs[2]) {
+                    paragraphs[2].textContent = translations[lang]['contact.hours'];
+                }
+            }
+
+            // Update footer
+            const footer = document.querySelector('footer p');
+            if (footer) footer.textContent = translations[lang]['footer.text'];
+
+            // Update all inquire button spans
+            document.querySelectorAll('[data-i18n="gallery.inquire"]').forEach(btn => {
+                btn.textContent = translations[lang]['gallery.inquire'];
+            });
+
+            // Update filter button label
+            const filterBtn = document.getElementById('filter-btn');
+            if (filterBtn) {
+                const filterKey = filterBtn.getAttribute('data-filter') === 'available'
+                    ? 'gallery.filter.all'
+                    : 'gallery.filter.available';
+                filterBtn.textContent = translations[lang][filterKey];
+            }
+
+            // Update language button states
+            document.querySelectorAll('.lang-btn[data-lang]').forEach(btn => {
+                btn.classList.toggle('active', btn.getAttribute('data-lang') === lang);
+            });
+        }
+
+        // Language selector functionality
+        document.querySelectorAll('.lang-btn[data-lang]').forEach(btn => {
+            btn.addEventListener('click', function () {
+                const lang = this.getAttribute('data-lang');
+                updateContent(lang);
+            });
+        });
+
+        // Logo tube toggle functionality
+        const logoOff = document.querySelector('.logo-off');
+        const logoOn = document.querySelector('.logo-on');
+        const logoContainer = document.querySelector('.logo-container');
+        let tubeIsOn = false; // Starts off, will turn on with animation
+        let animationComplete = false;
+
+        logoContainer.style.cursor = 'pointer';
+
+        // Wait for initial animation to complete (1.5s delay + 2s animation = 3.5s)
+        setTimeout(() => {
+            animationComplete = true;
+            tubeIsOn = true; // Now it's on after the animation
+            // Clear animations and set final state explicitly
+            logoOff.style.animation = 'none';
+            logoOn.style.animation = 'none';
+            logoOff.style.opacity = '0';
+            logoOn.style.opacity = '1';
+        }, 3500);
+
+        logoContainer.addEventListener('click', function () {
+            if (!animationComplete) return; // Ignore clicks during initial animation
+
+            if (tubeIsOn) {
+                // Turn off - fade to off state
+                logoOn.style.opacity = '0';
+                logoOn.style.transition = 'opacity 1.5s ease-out';
+                logoOff.style.opacity = '1';
+                logoOff.style.transition = 'opacity 1.5s ease-out';
+                tubeIsOn = false;
+            } else {
+                // Turn on - fade to on state
+                logoOn.style.opacity = '1';
+                logoOn.style.transition = 'opacity 1.5s ease-in';
+                logoOff.style.opacity = '0';
+                logoOff.style.transition = 'opacity 1.5s ease-in';
+                tubeIsOn = true;
+            }
+        });
+
+        // Smooth scroll for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Intersection Observer for fade-in animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, observerOptions);
+
+        // Observe service cards for fade-in
+        document.querySelectorAll('.service-card').forEach(el => {
+            el.classList.add('fade-in');
+            observer.observe(el);
+        });
+
+        // Gallery filter functionality
+        const filterBtn = document.getElementById('filter-btn');
+        if (filterBtn) {
+            filterBtn.addEventListener('click', function () {
+                const isFiltered = this.getAttribute('data-filter') === 'available';
+                if (isFiltered) {
+                    // Switch back to "show all"
+                    this.setAttribute('data-filter', 'all');
+                    this.classList.remove('active');
+                    this.textContent = translations[currentLang]['gallery.filter.available'];
+                    document.querySelectorAll('.service-card[data-status]').forEach(card => {
+                        card.style.display = '';
+                    });
+                } else {
+                    // Switch to "on sale only"
+                    this.setAttribute('data-filter', 'available');
+                    this.classList.add('active');
+                    this.textContent = translations[currentLang]['gallery.filter.all'];
+                    document.querySelectorAll('.service-card[data-status]').forEach(card => {
+                        card.style.display = card.getAttribute('data-status') === 'sale' ? '' : 'none';
+                    });
+                }
+            });
+        }
+
+        // Tab switching functionality
+        const tabLinks = document.querySelectorAll('.tab-link');
+        const tabContents = document.querySelectorAll('.tab-content');
+
+        tabLinks.forEach(link => {
+            link.addEventListener('click', function (e) {
+                e.preventDefault();
+
+                const targetTab = this.getAttribute('data-tab');
+
+                // Remove active class from all tabs and contents
+                tabLinks.forEach(l => l.classList.remove('active'));
+                tabContents.forEach(c => c.classList.remove('active'));
+
+                // Add active class to clicked tab and corresponding content
+                this.classList.add('active');
+                document.getElementById(targetTab).classList.add('active');
+            });
+        });
+    </script>
+</body>
+
+</html>
